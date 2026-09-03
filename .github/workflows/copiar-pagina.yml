@@ -1,0 +1,42 @@
+name: Copiar pagina a proyecto
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  copiar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar proyecto
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Copiar archivos de pagina
+        run: |
+          set -e
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/index.html -o index.html
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/login.html -o login.html
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/sistema.html -o sistema.html
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/horarios.html -o horarios.html
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/historial.html -o historial.html
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/style.css -o style.css
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/script.js -o script.js
+          curl -fsSL https://raw.githubusercontent.com/escarletrodriguez/pagina/main/logo.png -o logo.png
+
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html login.html sistema.html horarios.html historial.html style.css script.js logo.png
+          if git diff --cached --quiet; then
+            echo "No hay cambios que guardar."
+          else
+            git commit -m "Copiar pagina completa desde pagina"
+            git push
+          fi
