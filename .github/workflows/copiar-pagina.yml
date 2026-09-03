@@ -40,3 +40,14 @@ jobs:
             git commit -m "Copiar pagina completa desde pagina"
             git push
           fi
+
+      - name: Verificar copia
+        run: |
+          test -f index.html
+          test -f login.html
+          test -f sistema.html
+          test -f horarios.html
+          test -f historial.html
+          test -f style.css
+          test -f script.js
+          test -f logo.png
